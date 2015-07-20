@@ -2,10 +2,18 @@ from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
+class Bank(models.Model):
+    card_number = models.CharField(max_length=20)
+    balance = models.FloatField()
+
+    def __unicode__(self):
+        return self.card_number
+
 class UserProfile(models.Model):
     user = models.ForeignKey(User, unique=True)
     idcard = models.CharField(max_length=20)
     phone = models.CharField(max_length=15)
+    cards = models.ManyToManyField(Bank)
 
 class Item(models.Model):
     publisher = models.ForeignKey(User)

@@ -49,8 +49,47 @@ def login(request):
             except:
                 profile = UserProfile(user = user)
                 profile.save()
+            print 'login success'
+        else:
+            print 'invaid user'
+    else:
+        print 'get'
+        return HttpResponse('get method')
 
 def logout(request):
     auth.logout(request)
     # Redirect to a success page.
     return HttpResponseRedirect("/index")
+
+def register(request):
+    if request.method == 'POST':
+        print 'post method'
+        username = request.POST['username']
+        password = request.POST['password']
+        print username + " " + password
+        try:
+            user = User.objects.create_user(username, '', password)
+            user.save()
+            try:
+                user.get_profile()
+            except:
+                profile = UserProfile(user = user)
+                profile.save()
+            print 'register success'
+        except:
+            return HttpResponse('user exists')
+    else:
+        print 'get method'
+    return HttpResponse('register')
+
+def add_card(request):
+    return HttpResponse('add_card')
+
+def search(request):
+    return HttpResponse('search')
+
+def profile(request):
+    return HttpResponse('profile')
+
+def order(request):
+    return HttpResponse('order')
