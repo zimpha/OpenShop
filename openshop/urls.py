@@ -9,6 +9,13 @@ admin.autodiscover()
 urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^index/?$', index),
+    url(r'^login/?$', login),
     url(r'^logout/?$', logout),
+    url(r'^register/?$', register),
+    url(r'^order_list/?$', order_list),
+    url(r'^item_list/?$', item_list),
+    url(r'^search/?$', search),
+#    url(r'^add_card/?$', add_card),
+    url(r'^complete_order/?$', complete_order),
     url(r'^hello/?$', hello),
 ]
