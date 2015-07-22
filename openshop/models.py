@@ -17,6 +17,7 @@ class UserProfile(models.Model):
     idcard = models.CharField(max_length=20)
     phone = models.CharField(max_length=15)
     cards = models.OneToOneField(Bank)
+    nfc = models.CharField(max_length=20)
 
     def as_json(self):
         return dict(
@@ -25,7 +26,8 @@ class UserProfile(models.Model):
             email=self.user.email,
             idcard=self.idcard,
             phone=self.phone,
-            bankcard=self.cards.card_number
+            bankcard=self.cards.card_number,
+            nfc = self.nfc
         )
 
     def __unicode__(self):
