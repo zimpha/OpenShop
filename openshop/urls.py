@@ -15,7 +15,9 @@ urlpatterns = [
     url(r'^order_list/?$', order_list),
     url(r'^item_list/?$', item_list),
     url(r'^search/?$', search),
-#    url(r'^add_card/?$', add_card),
+    url(r'^order/?$', order),
+    url(r'^pay/?$', pay),
+    url(r'^add_item/?$', add_item),
     url(r'^complete_order/?$', complete_order),
     url(r'^hello/?$', hello),
 ]

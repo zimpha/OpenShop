@@ -40,13 +40,13 @@ class Item(models.Model):
     pic = models.CharField(max_length=50)
     description = models.TextField()
     quantity = models.IntegerField()
-    price = models.DecimalField(max_digits=5, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
     catalog = models.CharField(max_length=50)
 
     def __unicode__(self):
-        return self.title
+        return str(self.id) + ' ' + self.title
 
     def as_json(self):
         return dict(
@@ -57,14 +57,15 @@ class Item(models.Model):
             description=self.description,
             quantity=self.quantity,
             price=self.price.to_eng_string(),
-            start_time=self.start_time.isoformat(),
-            end_time=self.end_time.isoformat(),
+            start_time=self.start_time.strftime('%Y-%m-%d %H:%M:%S'),
+            end_time=self.end_time.strftime('%Y-%m-%d %H:%M:%S'),
             catalog=self.catalog
         )
 
 
 class Order(models.Model):
     buyer = models.ForeignKey(User)
+    seller = models.CharField(max_length=50)
     item = models.ForeignKey(Item)
     order_time = models.DateTimeField()
     is_set = models.BooleanField()
@@ -73,7 +74,7 @@ class Order(models.Model):
     box_id = models.IntegerField(blank=True)
     comment = models.TextField(blank=True)
     quantity = models.IntegerField()
-    price = models.DecimalField(max_digits=5, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __unicode__(self):
         return str(self.id) + ' ' + self.buyer.username + ' ' + self.item.title
@@ -82,9 +83,10 @@ class Order(models.Model):
         return dict(
             order_id=self.id,
             buyer=self.buyer.username,
+            seller=self.seller,
             item_id=self.item.id,
             item_name=self.item.title,
-            order_time=self.order_time.isoformat(),
+            order_time=self.order_time.strftime('%Y-%m-%d %H:%M:%S'),
             quantity=self.quantity,
             price=self.price.to_eng_string(),
             is_set=self.is_set,
