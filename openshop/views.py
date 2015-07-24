@@ -254,12 +254,12 @@ def order_list(request):
 
 
 def complete_order(request):
-    if 'order_id' not in request.GET['order_id']:
+    if 'order_id' not in request.GET:
         return HttpResponse(json.dumps(dict(result='no order_id')))
     order_id = request.GET['order_id']
     print order_id
     try:
-        order = Order.objects.get(order_id=order_id)
+        order = Order.objects.get(id=order_id)
         order.is_complete = True
         order.save()
         return HttpResponse(json.dumps(dict(result='success')))
@@ -294,6 +294,9 @@ def order(request):
         return HttpResponse(json.dumps(dict(result='no enough quantity')))
     item.save()
 
+    buyer_profile = UserProfile.objects.get(user = user)
+    seller_profile = UserProfile.objects.get(user = item.publisher)
+
     order = Order()
     order.quantity = quantity
     order.price = quantity * item.price
@@ -304,6 +307,8 @@ def order(request):
     order.is_set = False
     order.is_paid = False
     order.is_complete = False
+    order.nfc_seller = seller_profile.nfc
+    order.nfc_buyer = buyer_profile.nfc
     order.box_id = random.randint(1, 10)
     order.save()
 
@@ -342,6 +347,22 @@ def pay(request):
     seller_card.save()
     order.save()
     print 'ok'
+    return HttpResponse(json.dumps(dict(result='success')))
+
+
+def cancle_order(request):
+    if 'order_id' not in request.GET or request.GET['order_id'] == '':
+        return HttpResponse(json.dumps(dict(result='no order_id')))
+
+    try:
+        order = Order.objects.get(id = request.GET['order_id'])
+    except:
+        return HttpResponse(json.dumps(dict(result='no such order')))
+
+    item = order.item
+    item.quantity += order.quantity
+    item.save()
+    order.delete()
     return HttpResponse(json.dumps(dict(result='success')))
 
 

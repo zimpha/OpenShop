@@ -75,6 +75,8 @@ class Order(models.Model):
     comment = models.TextField(blank=True)
     quantity = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    nfc_seller = models.CharField(max_length=20)
+    nfc_buyer = models.CharField(max_length=20)
 
     def __unicode__(self):
         return str(self.id) + ' ' + self.buyer.username + ' ' + self.item.title

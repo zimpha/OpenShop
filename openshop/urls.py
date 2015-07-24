@@ -18,6 +18,7 @@ urlpatterns = [
     url(r'^order/?$', order),
     url(r'^pay/?$', pay),
     url(r'^add_item/?$', add_item),
+    url(r'^cancle_order/?$', cancle_order),
     url(r'^complete_order/?$', complete_order),
     url(r'^hello/?$', hello),
 ]
