@@ -17,8 +17,11 @@ urlpatterns = [
     url(r'^search/?$', search),
     url(r'^order/?$', order),
     url(r'^pay/?$', pay),
+    url(r'^set/?$', set),
     url(r'^add_item/?$', add_item),
-    url(r'^cancle_order/?$', cancle_order),
+    url(r'^cancel_order/?$', cancel_order),
+    url(r'^cancel_item/?$', cancel_item),
+    url(r'^change_pass/?$', change_pass),
     url(r'^complete_order/?$', complete_order),
     url(r'^hello/?$', hello),
 ]

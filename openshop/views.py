@@ -1,27 +1,13 @@
-import re
 import json
-import decimal
-import chardet
 import datetime
 import random
-from django import forms
 from openshop.models import *
-from django.template import *
-from bs4 import BeautifulSoup
-# from forms import RegisterForm
 from django.contrib import auth
 from django.http import HttpResponse
-from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect
-from django.forms.models import model_to_dict
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.auth.forms import UserCreationForm
-from django.shortcuts import render_to_response, RequestContext
 
 
 # Create your views here.
-
-
 def hello(request):
     return HttpResponse("Hello world")
 
@@ -75,6 +61,38 @@ def logout(request):
     auth.logout(request)
     # Redirect to a success page.
     return HttpResponseRedirect("/index")
+
+
+def set(request):
+    if 'order_id' not in request.GET or request.GET['order_id'] == '':
+        return HttpResponse(json.dumps(dict(result='no order_id')))
+    if 'box_id' not in request.GET or request.GET['box_id'] == '':
+        return HttpResponse(json.dumps(dict(result='no box_id')))
+    try:
+        order = Order.objects.get(id = request.GET['order_id'])
+    except:
+        return HttpResponse(json.dumps(dict(result='no such order')))
+
+    order.is_set = True
+    order.box_id = request.GET['box_id']
+    order.save()
+    return HttpResponse(json.dumps(dict(result='success')))
+
+
+def change_pass(request):
+    if 'username' not in request.GET or request.GET['username'] == '':
+        return HttpResponse(json.dumps(dict(result='no username')))
+    if 'new_pass' not in request.GET or request.GET['new_pass'] == '':
+        return HttpResponse(json.dumps(dict(result='no new password')))
+
+    try:
+        user = User.objects.get(username = request.GET['username'])
+    except:
+        return HttpResponse(json.dumps(dict(result='old password error')))
+
+    user.set_password(request.GET['new_pass'])
+    user.save()
+    return HttpResponse(json.dumps(dict(result='success')))
 
 
 def register(request):
@@ -350,7 +368,7 @@ def pay(request):
     return HttpResponse(json.dumps(dict(result='success')))
 
 
-def cancle_order(request):
+def cancel_order(request):
     if 'order_id' not in request.GET or request.GET['order_id'] == '':
         return HttpResponse(json.dumps(dict(result='no order_id')))
 
@@ -363,6 +381,20 @@ def cancle_order(request):
     item.quantity += order.quantity
     item.save()
     order.delete()
+    return HttpResponse(json.dumps(dict(result='success')))
+
+
+def cancel_item(request):
+    if 'item_id' not in request.GET or request.GET['item_id'] == '':
+        return HttpResponse(json.dumps(dict(result='no item_id')))
+
+    try:
+        item = Item.objects.get(id = request.GET['item_id'])
+    except:
+        return HttpResponse(json.dumps(dict(result='no such item')))
+
+    Order.objects.filter(item = item).delete()
+    item.delete()
     return HttpResponse(json.dumps(dict(result='success')))
 
 
